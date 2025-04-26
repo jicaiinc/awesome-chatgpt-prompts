@@ -592,6 +592,14 @@ function createPromptCards() {
                 <line x1="12" y1="19" x2="20" y2="19"></line>
                 </svg>
             </button>
+            <button class="sidegpt-button" title="Add to SideGPT" onclick="openInSideGPT(this, '${encodeURIComponent(
+              updatePromptPreview(content.trim())
+            )}')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+                </svg>
+            </button>
             <button class="yaml-button" title="Show prompt.yml format" onclick="showYamlModal(event, '${encodeURIComponent(title)}', '${encodeURIComponent(content)}')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -694,40 +702,47 @@ document.addEventListener("keydown", (e) => {
 
 function createModal() {
   const modalHTML = `
-    <div class="modal-overlay" id="modalOverlay">
+    <div id="modalOverlay" class="modal-overlay">
     <div class="modal">
         <div class="modal-header">
-        <h2 class="modal-title"></h2>
-        <div class="modal-actions">
-            <button class="modal-copy-button" title="Copy prompt">
+        <h3 class="modal-title"></h3>
+        <button class="modal-close">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        </div>
+        <div class="content-well">
+        <div class="modal-content"></div>
+        </div>
+        <div class="modal-footer">
+        <div class="modal-footer-left">
+            <button class="modal-copy-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
             </button>
-            <button class="modal-close" title="Close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-            </button>
-        </div>
-        </div>
-        <div class="modal-content"></div>
-        <div class="modal-footer">
-        <div class="modal-footer-left">
-            <a class="modal-contributor" target="_blank" rel="noopener"></a>
+            <a href="#" class="modal-contributor"></a>
         </div>
         <div class="modal-footer-right">
             <button class="modal-chat-button" onclick="openModalChat()">
             <svg class="chat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
-            <svg class="terminal-icon" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="terminal-icon" style="display: none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="4 17 10 11 4 5"></polyline>
                 <line x1="12" y1="19" x2="20" y2="19"></line>
             </svg>
-            Start Chat
+            Chat with ChatGPT
+            </button>
+            <button class="modal-sidegpt-button" onclick="openModalSideGPT()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+            </svg>
+            Add to SideGPT
             </button>
         </div>
         </div>
@@ -1306,4 +1321,25 @@ messages:
 
   modalOverlay.style.display = "block";
   document.body.style.overflow = "hidden";
+}
+
+// Function to open prompt in SideGPT
+function openInSideGPT(button, encodedPrompt) {
+  const promptText = buildPrompt(encodedPrompt);
+  const sideGptUrl = "chrome-extension://apohhoohjbglpgpigpifblfpkgmkgcfg/options.html#/prompt";
+  
+  // Add the specific instructions for SideGPT
+  const sideGptPrompt = promptText + " Please think step by step and then tell your design solution in Chinese first and then implement the code carefully. please note any code comment should be written in English.";
+  
+  // Open in new tab
+  window.open(`${sideGptUrl}?prompt=${encodeURIComponent(sideGptPrompt)}`, "_blank");
+}
+
+// Function to handle SideGPT button click in modal
+function openModalSideGPT() {
+  const modalContent = document.querySelector(".modal-content");
+  if (modalContent) {
+    const content = modalContent.textContent;
+    openInSideGPT(null, encodeURIComponent(content.trim()));
+  }
 }

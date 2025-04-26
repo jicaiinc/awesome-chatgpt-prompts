@@ -2240,4 +2240,73 @@ input:checked + .slider:before {
 
 .create-yaml-button:hover {
     background-color: #0e9f71;
+}
+
+.sidegpt-button {
+    background-color: transparent;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 100%;
+    transition: background-color 0.2s ease;
+    margin-left: 8px;
+}
+
+.sidegpt-button:hover {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.sidegpt-button svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+}
+
+.dark-mode .sidegpt-button {
+    color: var(--accent-color);
+}
+
+.dark-mode .sidegpt-button:hover {
+    background-color: rgba(16, 185, 129, 0.2);
+}
+
+.modal-sidegpt-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.modal-sidegpt-button:hover {
+    background-color: var(--accent-color-hover);
+}
+
+.modal-sidegpt-button svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+}
+
+.dark-mode .modal-sidegpt-button {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.dark-mode .modal-sidegpt-button:hover {
+    background-color: var(--accent-color-hover);
 } 
