@@ -4,7 +4,7 @@
     --text-color-light: #000000;
     --text-color-dark: #ffffff;
     --header-height: 145px;
-    --footer-height: 145px;
+    --footer-height: 60px;
     --sidebar-width: 300px;
     --accent-color: #10b981;
     --accent-color-hover: #059669;
@@ -183,16 +183,13 @@ body.dark-mode {
 }
 
 .site-footer {
-    padding: 12px 20px;
+    padding: 1px 20px;
     text-align: center;
     border-top: 1px solid #e1e4e8;
     background: var(--bg-color-light);
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    width: 100%;
     z-index: 100;
-    height: var(--footer-height);
+    margin-top: 0;
 }
 
 .dark-mode .site-footer {
@@ -203,39 +200,21 @@ body.dark-mode {
 .footer-content {
     max-width: none;
     margin: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0 30px;
-    text-align: left;
-    font-size: 0.7rem;
-    padding: 0 1rem;
+    text-align: center;
 }
 
-.footer-section {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.footer-section h3 {
-    font-size: 0.8rem;
-    margin: 0;
-    opacity: 0.8;
-}
-
-.dark-mode .footer-section h3 {
-    color: var(--text-color-dark);
-}
-
-.footer-section p {
-    font-size: inherit;
-    margin: 0;
-    line-height: 1.3;
-    opacity: 0.6;
+.footer-text {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3px 0;
     color: var(--text-color-light);
+    opacity: 0.8;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-.dark-mode .footer-section p {
+.dark-mode .footer-text {
     color: var(--text-color-dark);
 }
 
@@ -252,40 +231,25 @@ body.dark-mode {
 
 /* Add padding to main content to prevent overlap with fixed footer */
 .layout-wrapper {
-    padding-bottom: 100px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    margin-bottom: 2px;
 }
 
 @media (max-width: 768px) {
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        text-align: left;
-        padding: 0 1rem;
-    }
-    
-    .footer-section {
-        text-align: left;
-    }
-    
-    .footer-section p {
-        text-align: left;
-    }
-    
-    .book-links {
-        align-items: flex-start;
-    }
-    
-    .site-footer {
-        position: static;
-        text-align: left;
-    }
-    
     .layout-wrapper {
         padding-bottom: 0;
     }
     
-    .site-description {
-        display: none !important;
+    .site-footer {
+        position: static;
+        height: auto;
     }
     
     .site-header {
@@ -295,15 +259,15 @@ body.dark-mode {
         gap: 8px;
         position: relative;
     }
-
+    
     body.vibe .site-header {
         height: auto !important;
     }
-
+    
     body.vibe .sidebar {
         display: none !important;
     }
-
+    
     .header-right {
         position: absolute;
         top: 1.3rem;
@@ -661,17 +625,6 @@ body.dark-mode {
     font-size: 1.2rem;
 }
 
-.layout-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.content-wrapper {
-    display: flex;
-    flex: 1;
-}
-
 .sidebar {
     width: var(--sidebar-width);
     padding: 20px;
@@ -693,6 +646,7 @@ body.dark-mode {
     overflow-y: auto;
     padding: 20px;
     padding-top: 0;
+    padding-bottom: 4px;
     position: relative;
 }
 
@@ -881,6 +835,7 @@ body.dark-mode {
 .container-lg.markdown-body {
     padding: 0;
     max-width: none;
+    margin-bottom: 2px;
 }
 
 @media (max-width: 1600px) {
@@ -2262,10 +2217,11 @@ input:checked + .slider:before {
     background-color: rgba(16, 185, 129, 0.1);
 }
 
-.sidegpt-button svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
+.button-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
 }
 
 .dark-mode .sidegpt-button {
@@ -2279,7 +2235,7 @@ input:checked + .slider:before {
 .modal-sidegpt-button {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     padding: 8px 12px;
     background-color: var(--accent-color);
     color: white;
@@ -2292,14 +2248,14 @@ input:checked + .slider:before {
     margin-left: 8px;
 }
 
-.modal-sidegpt-button:hover {
-    background-color: var(--accent-color-hover);
+.modal-sidegpt-button .button-logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
 }
 
-.modal-sidegpt-button svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
+.modal-sidegpt-button:hover {
+    background-color: var(--accent-color-hover);
 }
 
 .dark-mode .modal-sidegpt-button {
@@ -2309,4 +2265,23 @@ input:checked + .slider:before {
 
 .dark-mode .modal-sidegpt-button:hover {
     background-color: var(--accent-color-hover);
+}
+
+.footer-text {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3px 0;
+    color: var(--text-color-light);
+    opacity: 0.8;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.dark-mode .footer-text {
+    color: var(--text-color-dark);
+}
+
+.footer-text a:hover {
+    opacity: 0.9;
 } 
