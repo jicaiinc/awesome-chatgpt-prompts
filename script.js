@@ -594,7 +594,7 @@ function createPromptCards() {
             </button>
             <button class="sidegpt-button" title="Add to SideGPT" onclick="openInSideGPT(this, '${encodeURIComponent(
               updatePromptPreview(content.trim())
-            )}')">
+            )}', '${encodeURIComponent(title)}')">
                 <img src="/assets/images/logo.png" alt="SideGPT" class="button-logo">
             </button>
             <button class="yaml-button" title="Show prompt.yml format" onclick="showYamlModal(event, '${encodeURIComponent(title)}', '${encodeURIComponent(content)}')">
@@ -1318,22 +1318,52 @@ messages:
 }
 
 // Function to open prompt in SideGPT
-function openInSideGPT(button, encodedPrompt) {
+function openInSideGPT(button, encodedPrompt, modalTitle) {
   const promptText = buildPrompt(encodedPrompt);
   const sideGptUrl = "chrome-extension://apohhoohjbglpgpigpifblfpkgmkgcfg/options.html#/prompt";
   
   // Add the specific instructions for SideGPT
   const sideGptPrompt = promptText + " Please think step by step and then tell your design solution in Chinese first and then implement the code carefully. please note any code comment should be written in English.";
   
-  // Open in new tab
-  window.open(`${sideGptUrl}?prompt=${encodeURIComponent(sideGptPrompt)}`, "_blank");
+  // Get title from parent elements if button exists, or use provided modalTitle
+  let title = modalTitle || "";
+  if (!title && button) {
+    const promptCard = button.closest('.prompt-card');
+    if (promptCard) {
+      const titleElement = promptCard.querySelector('.prompt-title');
+      if (titleElement) {
+        // Get the text content of the title, excluding the text from action-buttons
+        const actionButtons = titleElement.querySelector('.action-buttons');
+        const titleText = actionButtons 
+          ? titleElement.textContent.replace(actionButtons.textContent, '').trim()
+          : titleElement.textContent.trim();
+        title = encodeURIComponent(titleText);
+      }
+    }
+  }
+  
+  // Open in new tab with title parameter if available
+  const urlWithParams = title 
+    ? `${sideGptUrl}?title=${title}&prompt=${encodeURIComponent(sideGptPrompt)}`
+    : `${sideGptUrl}?prompt=${encodeURIComponent(sideGptPrompt)}`;
+  
+  window.open(urlWithParams, "_blank");
 }
 
 // Function to handle SideGPT button click in modal
 function openModalSideGPT() {
   const modalContent = document.querySelector(".modal-content");
+  const modalTitle = document.querySelector(".modal-title");
+  
   if (modalContent) {
     const content = modalContent.textContent;
-    openInSideGPT(null, encodeURIComponent(content.trim()));
+    let title = "";
+    
+    // Get title from modal if available
+    if (modalTitle && modalTitle.textContent !== "Prompt YAML") {
+      title = encodeURIComponent(modalTitle.textContent.trim());
+    }
+    
+    openInSideGPT(null, encodeURIComponent(content.trim()), title);
   }
 }
