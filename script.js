@@ -1317,6 +1317,32 @@ messages:
   document.body.style.overflow = "hidden";
 }
 
+function sendMessageToExtension(data) {
+  const extensionIds = {
+    sidegpt_webstore: "fpmofhcpkgglfkikeeconhinidpbcnbp",
+    side_dev: "apohhoohjbglpgpigpifblfpkgmkgcfg",
+    side_prod:"llnnbphpdimkdgpeldcdhmmdmfilaklk"
+  };
+
+  console.log("Sending message to extensions with data:", data);
+
+  // Check if chrome API is available
+  if (typeof window !== 'undefined' && window.chrome?.runtime?.sendMessage) {
+    const sendMessage = window.chrome.runtime.sendMessage;
+    Object.entries(extensionIds).forEach(([env, id]) => {
+      console.log(`Attempting to send message to ${env} extension (${id})`);
+      sendMessage(id, data, function(response) {
+        console.log(`Response from ${env} extension (${id}):`, response);
+        if (!response?.success) {
+          console.log(`Failed to send message to ${env} extension`);
+        }
+      });
+    });
+  } else {
+    console.log("Chrome runtime API not available. Cannot send message to extensions.");
+  }
+}
+
 // Function to open prompt in SideGPT
 function openInSideGPT(button, encodedPrompt, modalTitle) {
   const promptText = buildPrompt(encodedPrompt);
@@ -1342,12 +1368,13 @@ function openInSideGPT(button, encodedPrompt, modalTitle) {
     }
   }
   
-  // Open in new tab with title parameter if available
-  const urlWithParams = title 
-    ? `${sideGptUrl}?title=${title}&prompt=${encodeURIComponent(sideGptPrompt)}`
-    : `${sideGptUrl}?prompt=${encodeURIComponent(sideGptPrompt)}`;
+  // // Open in new tab with title parameter if available
+  // const urlWithParams = title 
+  //   ? `${sideGptUrl}?title=${title}&prompt=${encodeURIComponent(sideGptPrompt)}`
+  //   : `${sideGptUrl}?prompt=${encodeURIComponent(sideGptPrompt)}`;
   
-  window.open(urlWithParams, "_blank");
+  // window.open(urlWithParams, "_blank");
+  sendMessageToExtension({title: title, prompt: encodeURIComponent(sideGptPrompt)});
 }
 
 // Function to handle SideGPT button click in modal
