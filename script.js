@@ -1335,6 +1335,9 @@ function sendMessageToExtension(data) {
         console.log(`Response from ${env} extension (${id}):`, response);
         if (!response?.success) {
           console.log(`Failed to send message to ${env} extension`);
+          if(env === "sidegpt_webstore"){
+            window.open("https://chromewebstore.google.com/detail/sidegpt/fpmofhcpkgglfkikeeconhinidpbcnbp", "_blank");
+          }
         }
       });
     });
